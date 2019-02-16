@@ -2,15 +2,29 @@ import sys, os, django
 sys.path.append("/Users/om/Documents/CS50Web/project3") #here store is root folder(means parent).
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pizza.settings")
 django.setup()
-from orders.models import Toppings
+from orders.models import  PizzaPrice
 # sys.path.append('/Users/om/Documents/CS50Web/project3/')
 # os.environ['DJANGO_SETTINGS_MODULE'] = 'pizza.settings'
 # django.setup()
 
+price= [37.70,
+39.70,
+41.70,
+43.70,
+44.70]
+def mainOld():
+    i=0
+    for p in price:
+        if i==4:
+            i=5
+        PizzaPrice(classification="Sicilian", size="Large",num_toppings=i,price=p).save()
+        i+=1
+    
+    
 def main():
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    print(dir_path)
-    return print("Hello World")
+    for p in PizzaPrice.objects.all():
+        print(p)
+    
 
 
 if __name__ == "__main__":

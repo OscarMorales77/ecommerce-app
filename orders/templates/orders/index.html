@@ -1,12 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Tab Tittle</title>
-</head>
-<body>
-    <h1>Project 3</h1>
-</body>
-</html>
+{% extends "orders/layout.html" %}
+
+{% block title_page %}Main Page{% endblock %}
+
+{% block extra %} <style>
+    table {
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 20px;
+    }
+
+
+
+    th {
+        text-align: left;
+        font-weight: bold;
+        border-bottom: 1px solid #000;
+    }
+
+    th,
+    td {
+        padding: 8px 10px 10px;
+        line-height: inherit;
+        border-bottom: 1px solid #000;
+    }
+
+    th {
+        vertical-align: bottom
+    }
+
+    td {
+        vertical-align: top
+    }
+</style> {% endblock %}
+{% block body %}
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <h3 class="my-0 mr-md-auto font-weight-normal">Welcome</h3>
+
+
+    <nav class="my-2 my-md-0 mr-md-3">
+
+        <a class="p-2 text-dark" href="#">Pizza</a>
+        <a class="p-2 text-dark" href="#">Subs</a>
+        <a class="p-2 text-dark" href="#">Pasta</a>
+        <a class="p-2 text-dark" href="#">Salads</a>
+        <a class="p-2 text-dark" href="#">Dinner Platters</a>
+    </nav>
+    <a class="btn btn-outline-primary" href="#">Register</a>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-9">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Pizza Type</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Number of Toppings</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for menu in pizza_menu %}
+                    <tr>
+                        <td>{{menu.classification}}</td>
+                        <td>{{menu.size}} </td>
+                        <td align="center"> {{menu.num_toppings}} </td>
+                        <td> ${{menu.price}} </td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-3">
+            <h3>Toppings</h3>
+            <ul>
+                {% for topping in toppings %}
+                <li>
+                    {{ topping }}
+                </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
