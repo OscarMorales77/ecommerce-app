@@ -1,0 +1,51 @@
+{% extends "orders/layout.html" %}
+{% load static %}
+
+{% block title_page %}Main Page{% endblock %}
+
+{% block extra %} <link rel="stylesheet" href="{% static 'orders/main.css' %}"/> {% endblock %}
+
+{% block body %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-9">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Pizza Type</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Number of Toppings</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for menu in pizza_menu %}
+                    <tr>
+                        <td>{{menu.classification}}</td>
+                        <td>{{menu.size}} </td>
+                        <td align="center"> {{menu.num_toppings}} </td>
+                        <td> ${{menu.price}} </td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-3">
+            <h3>Toppings</h3>
+            <ul>
+                {% for topping in toppings %}
+                <li>
+                    {{ topping }}
+                </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
