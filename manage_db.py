@@ -2,7 +2,8 @@ import sys, os, django
 sys.path.append("/Users/om/Documents/CS50Web/project3") #here store is root folder(means parent).
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pizza.settings")
 django.setup()
-from orders.models import  PizzaPrice
+import inspect
+from orders.models import *
 # sys.path.append('/Users/om/Documents/CS50Web/project3/')
 # os.environ['DJANGO_SETTINGS_MODULE'] = 'pizza.settings'
 # django.setup()
@@ -21,10 +22,11 @@ def mainOld():
         i+=1
     
     
-def main():
+def mainOld2():
     for p in PizzaPrice.objects.all():
         print(p)
-    
+
+
 
 
 if __name__ == "__main__":

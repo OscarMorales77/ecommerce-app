@@ -4,8 +4,13 @@ from django.urls import reverse
 from .models import Toppings, PizzaPrice
 # Create your views here.
 def index(request):
+    print(request.path)
+    print("hello")
+    return render(request, "orders/index.html")
+
+def pizza(request):
     pizza_menu=PizzaPrice.objects.all()
     toppings=Toppings.objects.all()
-    print(toppings)
+    # print(toppings)
     context={"toppings":toppings, "pizza_menu":pizza_menu}
-    return render(request, "orders/index.html", context)
+    return render(request, "orders/pizza.html", context)

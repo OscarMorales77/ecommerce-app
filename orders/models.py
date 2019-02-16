@@ -24,16 +24,16 @@ class Toppings(models.Model):
         return f"{self.topping}"
 
     class Meta:
-        verbose_name_plural = "Toppings"
+        verbose_name_plural = "Pizza Toppings"
 
 
 class PizzaOrder(models.Model):
     # UserProfile or User could work
     customer = models.ForeignKey(
-        'UserProfile', related_name="orders", on_delete=models.CASCADE)
+        'UserProfile', related_name="pizzaOrder", on_delete=models.CASCADE)
     topping = models.ManyToManyField(Toppings, blank=True)
     price = models.ForeignKey(
-        PizzaPrice, on_delete=models.CASCADE, related_name="orders")
+        PizzaPrice, on_delete=models.CASCADE, related_name="pizzaOrder")
 
     def __str__(self):
         return f"{self.id}- {self.customer}- ${self.price.price}"
@@ -46,6 +46,10 @@ class UserProfile(models.Model):
     customer = models.OneToOneField(User, on_delete=models.CASCADE)
     # a user can have more than one Pizza Order, hence the many-to-many realtionship
     pizza_order = models.ManyToManyField(PizzaOrder, blank=True)
+    sub_order = models.ManyToManyField('SubOrder', blank=True)
+    pasta_order = models.ManyToManyField('PastaOrder', blank=True)
+    salad_order = models.ManyToManyField('SaladOrder', blank=True)
+    platter_order = models.ManyToManyField('PlatterOrder', blank=True)
 
     def __str__(self):
         return f"{self.customer}"
@@ -63,4 +67,91 @@ signals.post_save.connect(create_profile, sender=User,
                           weak=False, dispatch_uid='models.create_profile')
 
 
-    
+class SubPrice(models.Model):
+    classification = models.CharField(max_length=30)
+    size = models.CharField(max_length=10)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    class Meta:
+        verbose_name_plural = "Sub Price"
+
+
+class SubOrder(models.Model):
+    # UserProfile or User could work
+    customer = models.ForeignKey(
+        'UserProfile', related_name="subOrder", on_delete=models.CASCADE)
+    price = models.ForeignKey(
+        SubPrice, on_delete=models.CASCADE, related_name="subOrder")
+
+    def __str__(self):
+        return f"{self.customer}- ${self.price.classification}"
+
+    class Meta:
+        verbose_name_plural = "Sub Order"
+
+
+class PastaPrice(models.Model):
+    classification = models.CharField(max_length=30)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    class Meta:
+        verbose_name_plural = "Pasta Price"
+
+
+class PastaOrder(models.Model):
+    # UserProfile or User could work
+    customer = models.ForeignKey(
+        'UserProfile', related_name="pastaOrder", on_delete=models.CASCADE)
+    price = models.ForeignKey(
+        PastaPrice, on_delete=models.CASCADE, related_name="pastaOrder")
+
+    def __str__(self):
+        return f"{self.customer}- ${self.price.classification}"
+
+    class Meta:
+        verbose_name_plural = "Pasta Order"
+
+
+class SaladPrice(models.Model):
+    classification = models.CharField(max_length=30)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    class Meta:
+        verbose_name_plural = "Salad Price"
+
+
+class SaladOrder(models.Model):
+    # UserProfile or User could work
+    customer = models.ForeignKey(
+        'UserProfile', related_name="saladOrder", on_delete=models.CASCADE)
+    price = models.ForeignKey(
+        SaladPrice, on_delete=models.CASCADE, related_name="saladOrder")
+
+    def __str__(self):
+        return f"{self.customer}- ${self.price.classification}"
+
+    class Meta:
+        verbose_name_plural = "Salad Order"
+
+
+class PlatterPrice(models.Model):
+    classification = models.CharField(max_length=30)
+    size = models.CharField(max_length=10)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    class Meta:
+        verbose_name_plural = "Platter Price"
+
+
+class PlatterOrder(models.Model):
+    # UserProfile or User could work
+    customer = models.ForeignKey(
+        'UserProfile', related_name="platterOrder", on_delete=models.CASCADE)
+    price = models.ForeignKey(
+        PlatterPrice, on_delete=models.CASCADE, related_name="platterOrder")
+
+    def __str__(self):
+        return f"{self.customer}- ${self.price.classification}"
+
+    class Meta:
+        verbose_name_plural = "Platter Order"
