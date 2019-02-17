@@ -1,0 +1,36 @@
+{% extends base_template %}
+{% load static %}
+
+{% block title_page %}Main Page{% endblock %}
+
+{% block extra %} <link rel="stylesheet" href="{% static 'orders/main.css' %}"/> {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col"  align="center">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Platter</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for menu in sub_menu %}
+                    <tr>
+                        <td>{{menu.classification}}</td>
+                        <td>{{menu.size}} </td>
+                        <td> ${{menu.price}} </td>                     
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
