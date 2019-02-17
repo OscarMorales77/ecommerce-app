@@ -72,6 +72,9 @@ class SubPrice(models.Model):
     size = models.CharField(max_length=10)
     price = models.DecimalField(max_digits=6, decimal_places=2)
 
+    def __str__(self):
+        return f"{self.classification}, {self.size},  ${self.price}"
+
     class Meta:
         verbose_name_plural = "Sub Price"
 
@@ -93,7 +96,8 @@ class SubOrder(models.Model):
 class PastaPrice(models.Model):
     classification = models.CharField(max_length=30)
     price = models.DecimalField(max_digits=6, decimal_places=2)
-
+    def __str__(self):
+        return f"{self.classification},  ${self.price}"
     class Meta:
         verbose_name_plural = "Pasta Price"
 
@@ -115,7 +119,8 @@ class PastaOrder(models.Model):
 class SaladPrice(models.Model):
     classification = models.CharField(max_length=30)
     price = models.DecimalField(max_digits=6, decimal_places=2)
-
+    def __str__(self):
+        return f"{self.classification},  ${self.price}"
     class Meta:
         verbose_name_plural = "Salad Price"
 
@@ -139,6 +144,8 @@ class PlatterPrice(models.Model):
     size = models.CharField(max_length=10)
     price = models.DecimalField(max_digits=6, decimal_places=2)
 
+    def __str__(self):
+        return f"{self.classification},  {self.size},   ${self.price}"
     class Meta:
         verbose_name_plural = "Platter Price"
 

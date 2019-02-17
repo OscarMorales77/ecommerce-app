@@ -14,19 +14,24 @@
 
 <body>
 
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <h3 class="my-0 mr-md-auto font-weight-normal">Welcome</h3>
+        <div
+            class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+            <h3 class="my-0 mr-md-auto font-weight-normal">Welcome</h3>
 
-        <nav class="my-2 my-md-0 mr-md-3">
+            <nav class="my-2 my-md-0 mr-md-3">
 
-            <a class="p-2 text-dark" href="{% url 'pizza'%}">Pizza</a>
-            <a class="p-2 text-dark" href="menu/subs/">Subs</a>
-            <a class="p-2 text-dark" href="menu/pasta/">Pasta</a>
-            <a class="p-2 text-dark" href="menu/salads/">Salads</a>
-            <a class="p-2 text-dark" href="menu/platters/">Dinner Platters</a>
-        </nav>
-        <a class="btn btn-outline-primary" href="#">Register</a>
-    </div>
+                <a class="p-2 text-dark" href="{% url 'pizza'%}">Pizza</a>
+                <a class="p-2 text-dark" href="{% url 'subs'%}">Subs</a>
+                <a class="p-2 text-dark" href="{% url 'pasta'%}">Pasta</a>
+                <a class="p-2 text-dark" href="{% url 'salad'%}">Salads</a>
+                <a class="p-2 text-dark" href="{% url 'platter'%}">Dinner Platters</a>
+            </nav>
+            <a class="btn btn-outline-primary" href="{% url 'register'%}">Register</a>
+            &nbsp;
+            &nbsp;
+            <a class="btn btn-outline-primary" href="{% url 'login'%}">Log In</a>
+        </div>
+
     {% block body %}
 
     {% endblock %}
