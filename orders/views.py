@@ -5,17 +5,22 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from .models import Toppings, PizzaPrice, SubPrice, PastaPrice, SaladPrice,PlatterPrice
 
+#user is a class/model/table so i can pass
+
 #this function will handle all the logic pertaining to wether a user is authenticated
 #will also render the correct "base template"
 def auth_view(route, context, request):
+    context['user']=request.user #if the user is authenticated render different options
     if request.user.is_authenticated:
         base_template="orders/layoutAuth.html"
         #update the context dictionary/map
         context["base_template"]=base_template
+        print(request.user) 
         return render(request, route,context)
           
     base_template="orders/layout.html"
     context["base_template"]=base_template  
+    print(request.user) #PRINT AnonymousUser
     return render(request, route,context)
 
 
@@ -83,4 +88,4 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("index")) 
