@@ -44,27 +44,22 @@ class PizzaOrder(models.Model):
 
 class UserProfile(models.Model):
     customer = models.OneToOneField(User, on_delete=models.CASCADE)
-    # a user can have more than one Pizza Order, hence the many-to-many realtionship
-    pizza_order = models.ManyToManyField(PizzaOrder, blank=True)
-    sub_order = models.ManyToManyField('SubOrder', blank=True)
-    pasta_order = models.ManyToManyField('PastaOrder', blank=True)
-    salad_order = models.ManyToManyField('SaladOrder', blank=True)
-    platter_order = models.ManyToManyField('PlatterOrder', blank=True)
+    pending_orders=models.ForeignKey('PendingOrders', related_name="pending", on_delete=models.CASCADE, blank=True)
+    shooping_cart=models.ForeignKey('ShoppingCartOrders', related_name="cart", on_delete=models.CASCADE,  blank=True)
 
     def __str__(self):
         return f"{self.customer}"
 
 # create a user profile
-
-
 def create_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(customer=instance)
 
 
 # if a user is created, create a user profile automatically
-signals.post_save.connect(create_profile, sender=User,
-                          weak=False, dispatch_uid='models.create_profile')
+signals.post_save.connect(create_profile, sender=User, weak=False, dispatch_uid='models.create_profile')
+
+
 
 
 class SubPrice(models.Model):
@@ -164,7 +159,7 @@ class PlatterOrder(models.Model):
         verbose_name_plural = "Platter Order"
 
 class ShoppingCartOrders(models.Model):
-    customer = models.ForeignKey('UserProfile', related_name="customer", on_delete=models.CASCADE)
+    customer = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
     pizza_order = models.ManyToManyField(PizzaOrder, blank=True)
     sub_order = models.ManyToManyField('SubOrder', blank=True)
     pasta_order = models.ManyToManyField('PastaOrder', blank=True)
@@ -179,7 +174,7 @@ class ShoppingCartOrders(models.Model):
     
     
 class PendingOrders(models.Model):
-    customer = models.ForeignKey('UserProfile', related_name="customer", on_delete=models.CASCADE)
+    customer = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
     pizza_order = models.ManyToManyField(PizzaOrder, blank=True)
     sub_order = models.ManyToManyField('SubOrder', blank=True)
     pasta_order = models.ManyToManyField('PastaOrder', blank=True)
@@ -191,3 +186,10 @@ class PendingOrders(models.Model):
 
     class Meta:
         verbose_name_plural = "Pending Orders"
+
+def create_order_profile(sender, instance, created, **kwargs):
+    if created:
+        ShoppingCartOrders.objects.create(customer=instance)
+        PendingOrders.objects.create(customer=instance)
+
+signals.post_save.connect(create_order_profile, sender=UserProfile, weak=False, dispatch_uid='models.create_order_profile')
