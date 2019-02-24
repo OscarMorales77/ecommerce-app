@@ -112,8 +112,9 @@ def process_order(request):
     if order_type == 'pasta':
         price_model=PastaPrice.objects.get(pk=price_id) #retrieve this price model from databasse
         order=PastaOrder(customer=user_profile, price=price_model) #create this particular order and save to DB
-        order.save()
-        user_profile.pasta_order.add(order) #add order to customer profile
+        print(f'------------>{order.price.id}')
+        #order.save()
+        #user_profile.pasta_order.add(order) #add order to customer profile
         print("worked")
 
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponse(status=204)

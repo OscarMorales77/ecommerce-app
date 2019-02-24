@@ -162,3 +162,32 @@ class PlatterOrder(models.Model):
 
     class Meta:
         verbose_name_plural = "Platter Order"
+
+class ShoppingCartOrders(models.Model):
+    customer = models.ForeignKey('UserProfile', related_name="customer", on_delete=models.CASCADE)
+    pizza_order = models.ManyToManyField(PizzaOrder, blank=True)
+    sub_order = models.ManyToManyField('SubOrder', blank=True)
+    pasta_order = models.ManyToManyField('PastaOrder', blank=True)
+    salad_order = models.ManyToManyField('SaladOrder', blank=True)
+    platter_order = models.ManyToManyField('PlatterOrder', blank=True)
+
+    def __str__(self):
+        return f" Shopping Cart for : {self.customer}"
+
+    class Meta:
+        verbose_name_plural = "Shopping Cart"
+    
+    
+class PendingOrders(models.Model):
+    customer = models.ForeignKey('UserProfile', related_name="customer", on_delete=models.CASCADE)
+    pizza_order = models.ManyToManyField(PizzaOrder, blank=True)
+    sub_order = models.ManyToManyField('SubOrder', blank=True)
+    pasta_order = models.ManyToManyField('PastaOrder', blank=True)
+    salad_order = models.ManyToManyField('SaladOrder', blank=True)
+    platter_order = models.ManyToManyField('PlatterOrder', blank=True)   
+
+    def __str__(self):
+        return f"Pending Orders for : {self.customer}"
+
+    class Meta:
+        verbose_name_plural = "Pending Orders"
