@@ -44,8 +44,7 @@ class PizzaOrder(models.Model):
 
 class UserProfile(models.Model):
     customer = models.OneToOneField(User, on_delete=models.CASCADE)
-    pending_orders=models.ForeignKey('PendingOrders', related_name="pending", on_delete=models.CASCADE, blank=True)
-    shooping_cart=models.ForeignKey('ShoppingCartOrders', related_name="cart", on_delete=models.CASCADE,  blank=True)
+
 
     def __str__(self):
         return f"{self.customer}"
