@@ -2,8 +2,10 @@ import sys, os, django
 sys.path.append("/Users/om/Documents/CS50Web/project3") #here store is root folder(means parent).
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pizza.settings")
 django.setup()
-import inspect
+
+from django.contrib.auth.models import User
 from orders.models import PizzaOrder, PizzaPrice, Toppings, UserProfile, SubOrder,SubPrice,PastaOrder,PastaPrice,SaladOrder,SaladPrice,PlatterOrder,PlatterPrice
+
 # sys.path.append('/Users/om/Documents/CS50Web/project3/')
 # os.environ['DJANGO_SETTINGS_MODULE'] = 'pizza.settings'
 # django.setup()
@@ -45,7 +47,18 @@ def printL():
 	for i in SubPrice.objects.all():
 		print(i)
 
+def testQuery():
+
+    p= User.objects.get(username='test123')
+    userProfile=UserProfile.objects.get(customer=p)
+    #print(userProfile.pasta_order.all())
+    for p in userProfile.pasta_order.all():
+        print(p.price.price) #multiple level processing
+        
+        
+
 
 if __name__ == "__main__":
-	main()
+    testQuery()
+	#main()
 	#printL()

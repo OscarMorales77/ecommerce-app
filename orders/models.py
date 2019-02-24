@@ -110,7 +110,7 @@ class PastaOrder(models.Model):
         PastaPrice, on_delete=models.CASCADE, related_name="pastaOrder")
 
     def __str__(self):
-        return f"{self.customer}- ${self.price.classification}"
+        return f"{self.customer} - {self.price.classification}"
 
     class Meta:
         verbose_name_plural = "Pasta Order"

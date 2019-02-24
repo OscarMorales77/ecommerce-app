@@ -5,16 +5,13 @@
 {% block title_page %}Main Page{% endblock %}
 
 {% block extra %}
-<link rel="stylesheet" href="{% static 'orders/main.css' %}"/> {% endblock %}
+<link rel="stylesheet" href="{% static 'orders/main.css' %}"/> 
+<script type="text/javascript" src="{% static 'orders/pasta.js' %}"></script>
+{% endblock %}
 
 {% block body %}
 
-{% if user.is_authenticated %}
-
-{% else %}
-
-
-{% endif %}
+{% csrf_token %}
 
 <div class="container">
     <div class="row">
@@ -35,7 +32,7 @@
                     <td>{{menu.classification}}</td>
                     <td> ${{menu.price}}</td>
                     <td align="center">
-                        <button type="button" class="btn btn-outline-dark">+</button>
+                        <button type="button" class="btn btn-outline-dark" data-id="{{menu.id}}">+</button>
                     </td>
                 </tr>
                 {% endfor %}
