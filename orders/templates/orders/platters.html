@@ -3,17 +3,43 @@
 
 {% block title_page %}Main Page{% endblock %}
 
-{% block extra %} <link rel="stylesheet" href="{% static 'orders/main.css' %}"/> {% endblock %}
+{% block extra %}
+<link rel="stylesheet" href="{% static 'orders/main.css' %}" /> 
+<script type="text/javascript" src="{% static 'orders/processOrder.js' %}"></script>
+{% endblock %}
 
 {% block body %}
-
+{% csrf_token %}
 <div class="container">
     <div class="row">
-        <div class="col"  align="center">
+        <div class="col" align="center">
             <table>
+                {% if user.is_authenticated %}
                 <thead>
                     <tr>
-                        <th scope="col">Platter</th>
+                        <th scope="col" id="orderType">Platter</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Add to Cart</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for menu in sub_menu %}
+                    <tr>
+                        <td>{{menu.classification}}</td>
+                        <td>{{menu.size}} </td>
+                        <td> ${{menu.price}} </td>
+                        <td align="center">
+                            <button type="button" class="btn btn-outline-dark" data-id="{{menu.id}}">+</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+                {% else %}
+                <thead>
+                    <tr>
+                        <th scope="col" id="orderType">Platter</th>
                         <th scope="col">Size</th>
                         <th scope="col">Price</th>
                     </tr>
@@ -23,10 +49,13 @@
                     <tr>
                         <td>{{menu.classification}}</td>
                         <td>{{menu.size}} </td>
-                        <td> ${{menu.price}} </td>                     
+                        <td> ${{menu.price}} </td>
                     </tr>
                     {% endfor %}
                 </tbody>
+
+                {% endif %}
+
             </table>
         </div>
 

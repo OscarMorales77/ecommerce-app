@@ -75,13 +75,11 @@ class SubPrice(models.Model):
 
 class SubOrder(models.Model):
     # UserProfile or User could work
-    customer = models.ForeignKey(
-        'UserProfile', related_name="subOrder", on_delete=models.CASCADE)
-    price = models.ForeignKey(
-        SubPrice, on_delete=models.CASCADE, related_name="subOrder")
-
+    customer = models.ForeignKey('UserProfile', related_name="subOrder", on_delete=models.CASCADE)
+    price = models.ForeignKey(SubPrice, on_delete=models.CASCADE, related_name="subOrder")
+    extra_cheese=models.BooleanField(default=False)   
     def __str__(self):
-        return f"{self.customer}- ${self.price.classification}"
+        return f"{self.customer}- {self.price.classification}  : {self.extra_cheese}"
 
     class Meta:
         verbose_name_plural = "Sub Order"

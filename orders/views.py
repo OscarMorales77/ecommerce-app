@@ -4,7 +4,9 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.views.decorators.csrf import ensure_csrf_cookie
-from .models import Toppings, PizzaPrice, SubPrice, PastaPrice, PastaOrder, SaladPrice, PlatterPrice, UserProfile, ShoppingCartOrders, PendingOrders
+from .models import Toppings, PizzaPrice, SubPrice, SubOrder, PastaPrice, PastaOrder, SaladPrice, SaladOrder, \
+    PlatterPrice, PlatterOrder, UserProfile, ShoppingCartOrders, PendingOrders
+
 
 # user is a class/model/table so i can pass
 
@@ -25,7 +27,6 @@ def auth_view(route, context, request):
 
     base_template = "orders/layout.html"
     context["base_template"] = base_template
-    print(request.user)  # PRINT AnonymousUser
     return render(request, route, context)
 
 
@@ -91,7 +92,7 @@ def login_view(request):
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            # this is were the request gets assigned the user
+            # this is where the request gets assigned the user
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
@@ -109,11 +110,28 @@ def process_order(request):
     order_type = request.POST["orderType"]
     price_id = request.POST["id"]
     user_profile = UserProfile.objects.get(customer=request.user)
-    cart_order=ShoppingCartOrders.objects.get(customer=user_profile)
+    cart_order = ShoppingCartOrders.objects.get(customer=user_profile)  # get cart order for customer
     if order_type == 'Pasta':
-        price_model=PastaPrice.objects.get(pk=price_id) #retrieve this price model from databasse
-        order=PastaOrder(customer=user_profile, price=price_model) #create this particular order 
+        price_model = PastaPrice.objects.get(pk=price_id)  # retrieve this price model from databasse
+        order = PastaOrder(customer=user_profile, price=price_model)  # create this particular order
         order.save()
-        cart_order.pasta_order.add(order)
-
+        cart_order.pasta_order.add(order)  # add order to the customer's cart
+    elif order_type == 'Salad':
+        price_model = SaladPrice.objects.get(pk=price_id)
+        order = SaladOrder(customer=user_profile, price=price_model)
+        order.save()
+        cart_order.salad_order.add(order)
+        print('-------------> Salad Works')
+    elif order_type == 'Platter':
+        price_model = PlatterPrice.objects.get(pk=price_id)
+        order = PlatterOrder(customer=user_profile, price=price_model)
+        order.save()
+        cart_order.platter_order.add(order)
+        print('-------------> Platter Works')
+    elif order_type == 'Sub':
+        price_model = SubPrice.objects.get(pk=price_id)
+        order = SubOrder(customer=user_profile, price=price_model)
+        order.save()
+        cart_order.sub_order.add(order)
+        print('-------------> Sub Works')
     return HttpResponse(status=204)
