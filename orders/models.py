@@ -186,6 +186,7 @@ class PendingOrders(models.Model):
     class Meta:
         verbose_name_plural = "Pending Orders"
 
+#create pending and shoppign cart order when a user is created
 def create_order_profile(sender, instance, created, **kwargs):
     if created:
         ShoppingCartOrders.objects.create(customer=instance)

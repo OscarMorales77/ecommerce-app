@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.views.decorators.csrf import ensure_csrf_cookie
-from .models import Toppings, PizzaPrice, SubPrice, PastaPrice, PastaOrder, SaladPrice, PlatterPrice, UserProfile
+from .models import Toppings, PizzaPrice, SubPrice, PastaPrice, PastaOrder, SaladPrice, PlatterPrice, UserProfile, ShoppingCartOrders, PendingOrders
 
 # user is a class/model/table so i can pass
 
@@ -109,12 +109,11 @@ def process_order(request):
     order_type = request.POST["orderType"]
     price_id = request.POST["id"]
     user_profile = UserProfile.objects.get(customer=request.user)
-    if order_type == 'pasta':
+    cart_order=ShoppingCartOrders.objects.get(customer=user_profile)
+    if order_type == 'Pasta':
         price_model=PastaPrice.objects.get(pk=price_id) #retrieve this price model from databasse
-        order=PastaOrder(customer=user_profile, price=price_model) #create this particular order and save to DB
-        print(f'------------>{order.price.id}')
-        #order.save()
-        #user_profile.pasta_order.add(order) #add order to customer profile
-        print("worked")
+        order=PastaOrder(customer=user_profile, price=price_model) #create this particular order 
+        order.save()
+        cart_order.pasta_order.add(order)
 
     return HttpResponse(status=204)
