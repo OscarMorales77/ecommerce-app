@@ -28,26 +28,47 @@ def mainOld2():
         print(p)
 
 
-subs = ['Garden Salad',
-'Greek Salad',
-'Antipasto',
-'Baked Ziti',
-'Meatball Parm',
-'Chicken Parm',]
+subs = [0,
+1,
+2,
+3,
+5]
 
-price = [60,
-70,
-70,
-60,
-70,
-80]
+price = [37.7,
+39.7,
+41.7,
+43.7,
+44.7]
 
+tops=['Pepperoni',
+'Sausage',
+'Mushrooms',
+'Onions',
+'Ham',
+'Canadian Bacon',
+'Pineapple',
+'Eggplant',
+'Tomato & Basil',
+'Green Peppers',
+'Hamburger',
+'Spinach',
+'Artichoke',
+'Buffalo Chicken',
+'Barbecue Chicken',
+'Anchovies',
+'Black Olives',
+'Fresh Garlic',
+'Zucchini',]
 
-def main():
-    for i in range(len(subs)):
-        PlatterPrice(classification=subs[i], price=price[i], size="Large").save()
+def mainKKSXS():
+    for i in range(len(tops)):
+        PizzaPrice(classification="Sicilian", price=price[i], size="Large", num_toppings=subs[i]).save()
         print(f"{subs[i]}, {price[i]}")
 
+def main():
+    for i in range(len(tops)):
+        Toppings(topping=tops[i]).save()
+        print(f"{tops[i]}")
 
 def printL():
     for i in SubPrice.objects.all():

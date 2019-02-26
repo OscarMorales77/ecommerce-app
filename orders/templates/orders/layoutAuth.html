@@ -14,23 +14,22 @@
 
 <body>
 
-        <div
-            class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-            <h3 class="my-0 mr-md-auto font-weight-normal">Welcome</h3>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+        <h3 class="my-0 mr-md-auto font-weight-normal">Welcome</h3>
 
-            <nav class="my-2 my-md-0 mr-md-3">
+        <nav class="my-2 my-md-0 mr-md-3">
 
-                <a class="p-2 text-dark" href="{% url 'pizza'%}">Pizza</a>
-                <a class="p-2 text-dark" href="{% url 'subs'%}">Subs</a>
-                <a class="p-2 text-dark" href="{% url 'pasta'%}">Pasta</a>
-                <a class="p-2 text-dark" href="{% url 'salad'%}">Salads</a>
-                <a class="p-2 text-dark" href="{% url 'platter'%}">Dinner Platters</a>
-            </nav>
-            <a class="btn btn-outline-primary" href="{% url 'index'%}">Shopping Cart</a>
-            &nbsp;
-            &nbsp;
-            <a class="btn btn-outline-primary" href="{% url 'logout'%}">Log Out</a>
-        </div>
+            <a class="p-2 text-dark" href="{% url 'pizza'%}">Pizza</a>
+            <a class="p-2 text-dark" href="{% url 'subs'%}">Subs</a>
+            <a class="p-2 text-dark" href="{% url 'pasta'%}">Pasta</a>
+            <a class="p-2 text-dark" href="{% url 'salad'%}">Salads</a>
+            <a class="p-2 text-dark" href="{% url 'platter'%}">Dinner Platters</a>
+        </nav>
+        <a class="btn btn-outline-primary" href="{% url 'index'%}">Shopping Cart</a>
+        &nbsp;
+        &nbsp;
+        <a class="btn btn-outline-primary" href="{% url 'logout'%}">Log Out</a>
+    </div>
 
     {% block body %}
 
@@ -40,9 +39,11 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
