@@ -1,0 +1,114 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block title_page %}Main Page{% endblock %}
+
+{% block extra %}
+<link rel="stylesheet" href="{% static 'orders/main.css' %}" />
+<script type="text/javascript" src="{% static 'orders/cart.js' %}"></script>
+{% endblock %}
+
+
+{% block body %}
+{% csrf_token %}
+<div class="container">
+    <div class="row">
+        <div class="col" align="center">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Category</th>
+                        <th scope="col">Item</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Toppings</th>
+                        <th scope="col">Options</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Remove Item</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pizza in pizzas %}
+                    <tr>
+                        <td>Pizza</td>
+                        <td>{{pizza.price.classification}}</td>
+                        <td>{{pizza.price.size}}</td>
+                        <td>
+                            {% for top in pizza.topping.all %}
+                            {{top}} <br />
+                            {% endfor %}
+                        </td>
+                        <td></td>
+                        <td>${{pizza.price.price}}</td>
+                        <td align="center">
+                            <button type="button" class="btn btn-outline-dark" data-id="{{pizza.id}}" data-type="Pizza"
+                                data-price="{{pizza.price.price}}">X</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% for sub in subs %}
+                    <tr>
+                        <td>Sub</td>
+                        <td>{{sub.price.classification}}</td>
+                        <td>{{sub.price.size}}</td>
+                        <td> </td>
+                        {% if sub.extra_cheese %}
+                        <td>Extra Cheese</td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                        <td>${{sub.price.price}}</td>
+                        <td align="center">
+                            <button type="button" class="btn btn-outline-dark" data-id="{{sub.id}}" data-type="Sub"
+                                data-price="{{sub.price.price}}">X</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th scope="row">Total</th>
+                        <th> </th>
+                        <th> </th>
+                        <th> </th>
+                        <th> </th>
+                        <th id="cartTotal"> </th>
+                        <th> <button type="button" class="btn btn-dark" id="confirm">Confirm Order</button> </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="shoppinModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Confirmed!</h5>
+                <form action="{% url 'cart'%}" method="POST">
+                        {% csrf_token %}
+                    <button type="submit" class="close"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </form>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success" role="alert">
+                    Order has been placed, thank you!
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form action="{% url 'cart'%}" method="POST">
+                        {% csrf_token %}
+                    <button type="submit" class="btn btn-secondary" >Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
