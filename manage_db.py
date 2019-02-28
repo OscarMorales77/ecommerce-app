@@ -75,10 +75,10 @@ def stuff():
 	userProfile = UserProfile.objects.get(customer=p)
 	cart=ShoppingCartOrders.objects.get(customer=userProfile)
 	print(cart)
-	items=cart.sub_order.all()
+	items=cart.pizza_order.all()
 	# for i in items:
 	# 	i.delete()
-	print(cart.sub_order.all())
+	print(items)
 
 
 

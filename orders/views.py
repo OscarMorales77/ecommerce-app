@@ -36,14 +36,35 @@ def index(request):
     return auth_view(route, context, request)
 
 def cart(request):
+    print(request.method)
     route = "orders/shoppingcart.html"
     user_profile = UserProfile.objects.get(customer=request.user)
     cart=ShoppingCartOrders.objects.get(customer=user_profile)
+    pending=PendingOrders.objects.get(customer=user_profile)
     c_pizzas=cart.pizza_order.all()
     c_subs=cart.sub_order.all()
     c_pastas=cart.pasta_order.all()
     c_salads=cart.salad_order.all()
     c_platters=cart.platter_order.all()
+    #vis post request remove items from cart and add them to the customers pending orders
+    if request.method == 'POST':
+        for order in c_pizzas:
+            pending.pizza_order.add(order)
+            cart.pizza_order.remove(order)
+        for order in c_subs:
+            pending.sub_order.add(order)
+            cart.sub_order.remove(order)
+        for order in c_pastas:
+            pending.pasta_order.add(order)
+            cart.pasta_order.remove(order)
+        for order in c_salads:
+            pending.salad_order.add(order)
+            cart.salad_order.remove(order)
+        for order in c_platters:
+            pending.platter_order.add(order)
+            cart.platter_order.remove(order)
+        return HttpResponseRedirect(reverse("index"))
+
     context = {"pizzas":c_pizzas,"subs":c_subs,"pastas":c_pastas,"salads":c_salads, "platters":c_platters}
     return auth_view(route, context, request)
 
@@ -153,6 +174,7 @@ def process_order(request):
         order = PastaOrder(customer=user_profile, price=price_model)  # create this particular order
         order.save()
         cart_order.pasta_order.add(order)  # add order to the customer's cart
+        print('-------------> Pasta Works')
     elif order_type == 'Salad':
         price_model = SaladPrice.objects.get(pk=price_id)
         order = SaladOrder(customer=user_profile, price=price_model)
@@ -184,5 +206,4 @@ def process_order(request):
             order.topping.add(c_topping)
         print('----------------->Pizza')
         
-
     return HttpResponse(status=204)
