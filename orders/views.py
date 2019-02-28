@@ -46,7 +46,7 @@ def cart(request):
     c_pastas=cart.pasta_order.all()
     c_salads=cart.salad_order.all()
     c_platters=cart.platter_order.all()
-    #vis post request remove items from cart and add them to the customers pending orders
+    #via post request remove items from cart and add them to the customers pending orders
     if request.method == 'POST':
         for order in c_pizzas:
             pending.pizza_order.add(order)

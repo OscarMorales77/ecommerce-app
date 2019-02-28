@@ -46,6 +46,7 @@
                         </td>
                     </tr>
                     {% endfor %}
+
                     {% for sub in subs %}
                     <tr>
                         <td>Sub</td>
@@ -61,6 +62,52 @@
                         <td align="center">
                             <button type="button" class="btn btn-outline-dark" data-id="{{sub.id}}" data-type="Sub"
                                 data-price="{{sub.price.price}}">X</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    {% for pasta in pastas %}
+                    <tr>
+                        <td>Pasta</td>
+                        <td>{{pasta.price.classification}}</td>
+                        <td></td>
+                        <td> </td>
+                        <td> </td>
+                        <td>${{pasta.price.price}}</td>
+                        <td align="center">
+                            <button type="button" class="btn btn-outline-dark" data-id="{{pasta.id}}" data-type="Pasta"
+                                data-price="{{pasta.price.price}}">X</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+
+                    {% for salad in salads %}
+                    <tr>
+                        <td>Salad</td>
+                        <td>{{salad.price.classification}}</td>
+                        <td></td>
+                        <td> </td>
+                        <td> </td>
+                        <td>${{salad.price.price}}</td>
+                        <td align="center">
+                            <button type="button" class="btn btn-outline-dark" data-id="{{salad.id}}" data-type="Salad"
+                                data-price="{{salad.price.price}}">X</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    {% for platter in platters %}
+                    <tr>
+                        <td>Platter</td>
+                        <td>{{platter.price.classification}}</td>
+                        <td>{{platter.price.size}}</td>
+                        <td> </td>
+                        <td> </td>
+                        <td>${{platter.price.price}}</td>
+                        <td align="center">
+                            <button type="button" class="btn btn-outline-dark" data-id="{{platter.id}}" data-type="Platter"
+                                data-price="{{platter.price.price}}">X</button>
                         </td>
                     </tr>
                     {% endfor %}

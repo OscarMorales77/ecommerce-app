@@ -15,12 +15,12 @@ document.addEventListener('DOMContentLoaded',() => {
             data.append('csrfmiddlewaretoken',document.querySelector('input[name=csrfmiddlewaretoken]').value);
             request.send(data);
             totalPrice-=button.dataset.price;
-            totalPrice=Math.round(totalPrice * 10) / 10;
+            totalPrice=Math.round(totalPrice * 1000) / 1000;
             document.querySelector("#cartTotal").innerHTML= `$${totalPrice.toFixed(2)}`; 
             button.parentNode.parentNode.remove();// remove element from page
         };
     });
-    totalPrice=Math.round(totalPrice * 10) / 10;
+    totalPrice=Math.round(totalPrice * 1000) / 1000;
     document.querySelector("#cartTotal").innerHTML= `$${totalPrice.toFixed(2)}`;  //template literals
 
 });
