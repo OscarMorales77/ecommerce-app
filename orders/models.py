@@ -29,11 +29,9 @@ class Toppings(models.Model):
 
 class PizzaOrder(models.Model):
     # UserProfile or User could work
-    customer = models.ForeignKey(
-        'UserProfile', related_name="pizzaOrder", on_delete=models.CASCADE)
+    customer = models.ForeignKey( 'UserProfile', related_name="pizzaOrder", on_delete=models.CASCADE)
     topping = models.ManyToManyField(Toppings, blank=True)
-    price = models.ForeignKey(
-        PizzaPrice, on_delete=models.CASCADE, related_name="pizzaOrder")
+    price = models.ForeignKey(PizzaPrice, on_delete=models.CASCADE, related_name="pizzaOrder")
 
     def __str__(self):
         return f"{self.id}- {self.customer}- ${self.price.price}"
@@ -157,7 +155,7 @@ class PlatterOrder(models.Model):
 
 class ShoppingCartOrders(models.Model):
     customer = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
-    pizza_order = models.ManyToManyField(PizzaOrder, blank=True)
+    pizza_order = models.ManyToManyField('PizzaOrder', blank=True)
     sub_order = models.ManyToManyField('SubOrder', blank=True)
     pasta_order = models.ManyToManyField('PastaOrder', blank=True)
     salad_order = models.ManyToManyField('SaladOrder', blank=True)

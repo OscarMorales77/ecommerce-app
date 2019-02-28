@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.views.decorators.csrf import ensure_csrf_cookie
-from .models import Toppings, PizzaPrice, SubPrice, SubOrder, PastaPrice, PastaOrder, SaladPrice, SaladOrder, \
+from .models import Toppings, PizzaPrice, PizzaOrder, SubPrice, SubOrder, PastaPrice, PastaOrder, SaladPrice, SaladOrder, \
     PlatterPrice, PlatterOrder, UserProfile, ShoppingCartOrders, PendingOrders
 
 
@@ -35,6 +35,42 @@ def index(request):
     context = {}
     return auth_view(route, context, request)
 
+def cart(request):
+    route = "orders/shoppingcart.html"
+    user_profile = UserProfile.objects.get(customer=request.user)
+    cart=ShoppingCartOrders.objects.get(customer=user_profile)
+    c_pizzas=cart.pizza_order.all()
+    c_subs=cart.sub_order.all()
+    c_pastas=cart.pasta_order.all()
+    c_salads=cart.salad_order.all()
+    c_platters=cart.platter_order.all()
+    context = {"pizzas":c_pizzas,"subs":c_subs,"pastas":c_pastas,"salads":c_salads, "platters":c_platters}
+    return auth_view(route, context, request)
+
+def remove_order(request):
+    order_type = request.POST["orderType"]
+    order_id = request.POST["id"]
+    if order_type == 'Pasta':
+        order = PastaOrder.objects.get(pk=order_id)
+        order.delete()
+    elif order_type == 'Salad':
+        order = SaladOrder.objects.get(pk=order_id)
+        order.delete()  
+        print('-------------> Salad Works')
+    elif order_type == 'Platter':
+        order = PlatterOrder.objects.get(pk=order_id)
+        order.delete()  
+        print('-------------> Platter Works')
+    elif order_type == 'Sub':  
+        order = SubOrder.objects.get(pk=order_id)
+        order.delete()  
+        print('-------------> Sub Works')
+
+    elif order_type == 'Pizza':
+        order = PizzaOrder.objects.get(pk=order_id)
+        order.delete()  
+        print('----------------->Pizza')
+    return HttpResponse(status=204)
 
 def pizza(request):
     route = "orders/pizza.html"
@@ -108,6 +144,7 @@ def logout_view(request):
 
 def process_order(request):
     order_type = request.POST["orderType"]
+    print(order_type)
     price_id = request.POST["id"]
     user_profile = UserProfile.objects.get(customer=request.user)
     cart_order = ShoppingCartOrders.objects.get(customer=user_profile)  # get cart order for customer
@@ -136,10 +173,16 @@ def process_order(request):
         print('-------------> Sub Works')
 
     elif order_type == 'Pizza':  
-        print(order_type)
-        print(price_id)
-        stuff = request.POST.getlist('toppings[]')
-        print(stuff)
-        print('-------------> Pizza Works')
+        price_model = PizzaPrice.objects.get(pk=price_id)
+        order = PizzaOrder(customer=user_profile, price=price_model)
+        order.save()
+        cart_order.pizza_order.add(order)
+        toppings = request.POST.getlist('toppings[]')
+        #add toppings to pizza order
+        for i in toppings:
+            c_topping=Toppings.objects.get(topping=i)
+            order.topping.add(c_topping)
+        print('----------------->Pizza')
+        
 
     return HttpResponse(status=204)

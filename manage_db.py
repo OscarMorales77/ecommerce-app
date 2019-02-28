@@ -6,7 +6,7 @@ django.setup()
 
 from django.contrib.auth.models import User
 from orders.models import PizzaOrder, PizzaPrice, Toppings, UserProfile, SubOrder, SubPrice, PastaOrder, PastaPrice, \
-    SaladOrder, SaladPrice, PlatterOrder, PlatterPrice
+    SaladOrder, SaladPrice, PlatterOrder, PlatterPrice, ShoppingCartOrders, PendingOrders
 
 
 # sys.path.append('/Users/om/Documents/CS50Web/project3/')
@@ -69,21 +69,21 @@ def main():
     for i in range(len(tops)):
         Toppings(topping=tops[i]).save()
         print(f"{tops[i]}")
+#get current items from  shopping cart
+def stuff():
+	p = User.objects.get(username='test123')
+	userProfile = UserProfile.objects.get(customer=p)
+	cart=ShoppingCartOrders.objects.get(customer=userProfile)
+	print(cart)
+	items=cart.sub_order.all()
+	# for i in items:
+	# 	i.delete()
+	print(cart.sub_order.all())
 
-def printL():
-    for i in SubPrice.objects.all():
-        print(i)
 
-
-def testQuery():
-    p = User.objects.get(username='test123')
-    userProfile = UserProfile.objects.get(customer=p)
-    # print(userProfile.pasta_order.all())
-    for p in userProfile.pasta_order.all():
-        print(p.price.price)  # multiple level processing
 
 
 if __name__ == "__main__":
-    # testQuery()
-    main()
-# printL()
+    stuff()
+    #main()
+	# printL()

@@ -31,16 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             toppings.push(e.options[e.selectedIndex].value);
             //console.log( e.options[e.selectedIndex].value);
         });
-        /*
-        const request = new XMLHttpRequest();
-        request.open('POST', '/private');
-        const data = new FormData();
-        data.append('orderType', 'Pizza'); //tell the server what type of order is being processed
-        data.append('id',pizzaID); //get the unique id price order to look-up in the database
-        //send the required CSRF token, can also be implemented via cookie and @ensure_csrf_cookie decorator
-        data.append('csrfmiddlewaretoken',document.querySelector('input[name=csrfmiddlewaretoken]').value);
-        request.send(data);
-        */
+
         console.log(toppings)
         var token=document.querySelector('input[name=csrfmiddlewaretoken]').value;
         $.ajax({
@@ -54,11 +45,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-
-/*
-$.ajax({
-    type: 'POST',
-    url: '/private',
-    data: {'toppings[]': toppings},
-});
-*/
