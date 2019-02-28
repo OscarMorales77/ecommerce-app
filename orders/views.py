@@ -189,7 +189,7 @@ def process_order(request):
         print('-------------> Platter Works')
     elif order_type == 'Sub':  #to do add functionality for extra cheese on subs.
         price_model = SubPrice.objects.get(pk=price_id)
-        order = SubOrder(customer=user_profile, price=price_model)
+        order = SubOrder(customer=user_profile, price=price_model, extra_cheese=request.POST["extra"])
         order.save()
         cart_order.sub_order.add(order)
         print('-------------> Sub Works')
