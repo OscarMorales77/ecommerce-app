@@ -1,13 +1,16 @@
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomForm
 from django.views.decorators.csrf import ensure_csrf_cookie
 from .models import Toppings, PizzaPrice, PizzaOrder, SubPrice, SubOrder, PastaPrice, PastaOrder, SaladPrice, SaladOrder, \
     PlatterPrice, PlatterOrder, UserProfile, ShoppingCartOrders, PendingOrders
 
+import stripe
 
+stripe.api_key = settings.STRIPE_SECRET_KEY 
 # user is a class/model/table so i can pass
 
 # this function will handle all the logic pertaining to wether a user is authenticated
@@ -18,6 +21,7 @@ def auth_view(route, context, request):
     # if the user is authenticated render different options
     context['user'] = request.user
     if request.user.is_authenticated:
+        print(request.user.email)
         base_template = "orders/layoutAuth.html"
         # update the context dictionary/map
         context["base_template"] = base_template
@@ -33,6 +37,7 @@ def auth_view(route, context, request):
 def index(request):
     route = "orders/index.html"
     context = {}
+    print(settings.STRIPE_SECRET_KEY )
     return auth_view(route, context, request)
 
 def cart(request):
@@ -48,21 +53,35 @@ def cart(request):
     c_platters=cart.platter_order.all()
     #via post request remove items from cart and add them to the customers pending orders
     if request.method == 'POST':
+        total_price=0
         for order in c_pizzas:
+            total_price+=order.price.price
             pending.pizza_order.add(order)
             cart.pizza_order.remove(order)
         for order in c_subs:
+            total_price+=order.price.price
             pending.sub_order.add(order)
             cart.sub_order.remove(order)
         for order in c_pastas:
+            total_price+=order.price.price
             pending.pasta_order.add(order)
             cart.pasta_order.remove(order)
         for order in c_salads:
+            total_price+=order.price.price
             pending.salad_order.add(order)
             cart.salad_order.remove(order)
         for order in c_platters:
+            total_price+=order.price.price
             pending.platter_order.add(order)
             cart.platter_order.remove(order)
+        print(f"----------> total is {round(total_price*100)}")
+        #customer= stripe.Customer.create(email=request.user.emai)
+        stripe.Charge.create(
+            amount=round(total_price*100),
+            currency='usd',
+            description='A Django charge',
+            source=request.POST['stripeToken']
+        )
         return HttpResponseRedirect(reverse("index"))
 
     context = {"pizzas":c_pizzas,"subs":c_subs,"pastas":c_pastas,"salads":c_salads, "platters":c_platters}
@@ -131,14 +150,14 @@ def platter(request):
 
 def register(request):
     if request.method == 'POST':
-        submmited_form = UserCreationForm(request.POST)
+        submmited_form = CustomForm(request.POST)
         if submmited_form.is_valid():
             submmited_form.save()
             return HttpResponseRedirect(reverse("index"))
         # render a html with the data already submitted by the user that does not meet the criteria
         return render(request, "orders/register.html", {"form": submmited_form})
 
-    form = UserCreationForm()
+    form = CustomForm()
     context = {"form": form}
     return render(request, "orders/register.html", context)
 

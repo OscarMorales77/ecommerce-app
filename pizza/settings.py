@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'crispy_forms',
+    'stripe',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -120,4 +121,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+#crispy form settings
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+#stripe settings dev mode only
+# settings.py
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = 'pk_test_vISq8ixiwW1akE5yOcLXMbrj'

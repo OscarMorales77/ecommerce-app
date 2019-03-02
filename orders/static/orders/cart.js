@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded',() => {
     let totalPrice=0;
-    document.querySelector("#confirm").onclick=() => {
-        $('#shoppinModal').modal('show');
-    };
+
+    
+    // document.querySelector("#confirm").onclick=() => {
+    //     $('#shoppinModal').modal('show');
+    // };
+    
     document.querySelectorAll('.btn-outline-dark').forEach((button) => {
         totalPrice+=Number(button.dataset.price);   
         console.log("array of buttons created")
@@ -22,5 +25,6 @@ document.addEventListener('DOMContentLoaded',() => {
     });
     totalPrice=Math.round(totalPrice * 1000) / 1000;
     document.querySelector("#cartTotal").innerHTML= `$${totalPrice.toFixed(2)}`;  //template literals
-
+   // document.querySelector('.Button-content').innerText=`$${totalPrice.toFixed(2)}`;
+  // document.querySelector('.stripe-button').setAttribute('data-amount', '888');
 });

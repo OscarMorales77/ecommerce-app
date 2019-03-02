@@ -106,8 +106,8 @@
                         <td> </td>
                         <td>${{platter.price.price}}</td>
                         <td align="center">
-                            <button type="button" class="btn btn-outline-dark" data-id="{{platter.id}}" data-type="Platter"
-                                data-price="{{platter.price.price}}">X</button>
+                            <button type="button" class="btn btn-outline-dark" data-id="{{platter.id}}"
+                                data-type="Platter" data-price="{{platter.price.price}}">X</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -121,7 +121,17 @@
                         <th> </th>
                         <th> </th>
                         <th id="cartTotal"> </th>
-                        <th> <button type="button" class="btn btn-dark" id="confirm">Confirm Order</button> </th>
+                        <!-- <th> <button type="button" class="btn btn-dark" id="confirm">Confirm Order</button> </th> -->
+                        <th>
+                            <form action="{% url 'cart'%}" method="POST">
+                                    {% csrf_token %}
+                                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                    data-key="pk_test_vISq8ixiwW1akE5yOcLXMbrj" 
+                                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                                    data-locale="auto">
+                                </script>
+                            </form>
+                        </th>
                     </tr>
                 </tfoot>
             </table>
@@ -137,8 +147,8 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Confirmed!</h5>
                 <form action="{% url 'cart'%}" method="POST">
-                        {% csrf_token %}
-                    <button type="submit" class="close"  aria-label="Close">
+                    {% csrf_token %}
+                    <button type="submit" class="close" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </form>
@@ -150,8 +160,8 @@
             </div>
             <div class="modal-footer">
                 <form action="{% url 'cart'%}" method="POST">
-                        {% csrf_token %}
-                    <button type="submit" class="btn btn-secondary" >Close</button>
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-secondary">Close</button>
                 </form>
             </div>
         </div>
