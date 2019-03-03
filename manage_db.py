@@ -11,7 +11,7 @@ from orders.models import PizzaOrder, PizzaPrice, Toppings, UserProfile, SubOrde
 
 # sys.path.append('/Users/om/Documents/CS50Web/project3/')
 # os.environ['DJANGO_SETTINGS_MODULE'] = 'pizza.settings'
-# django.setup()
+# django.setup() dd
 
 
 def mainOld():

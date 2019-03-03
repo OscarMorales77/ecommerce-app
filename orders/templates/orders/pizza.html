@@ -9,17 +9,17 @@
 <!-- Handle Bars Template System -->
 <script id="inputTemplate" type="text/x-handlebars-template">
     <div>
-            <select class="custom-select" >
-                    <option selected>Select...</option>
-                    {% for topping in toppings %}
-                    <option value="{{topping}}">{{topping}}</option>
-                    {% endfor %}
-             </select>
+        <select class="custom-select">
+            <option selected>Select...</option>
+            {% for topping in toppings %}
+            <option value="{{topping}}">{{topping}}</option>
+            {% endfor %}
+        </select>
     </div>
     <br>
 </script>
 <!-- End of hande bars -->
-<link rel="stylesheet" href="{% static 'orders/main.css' %}" /> 
+<link rel="stylesheet" href="{% static 'orders/main.css' %}"/>
 <script type="text/javascript" src="{% static 'orders/index.js' %}"></script>
 {% endblock %}
 
@@ -32,51 +32,53 @@
             <table>
                 {% if user.is_authenticated %}
                 <thead>
-                    <tr>
-                        <th scope="col">Pizza Type</th>
-                        <th scope="col">Size</th>
-                        <th scope="col">Number of Toppings</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Add to Cart</th>
-                    </tr>
+                <tr>
+                    <th scope="col">Pizza Type</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Number of Toppings</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Add to Cart</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for menu in pizza_menu %}
-                    <tr>
-                        <td>{{menu.classification}}</td>
-                        <td>{{menu.size}} </td>
-                        <td align="center"> {{menu.num_toppings}} {% if menu.num_toppings == 5 %}(Special) {% endif %}
-                        </td>
-                        <td> ${{menu.price}} </td>
-                        <td align="center">
-                            <button type="button" class="btn btn-outline-dark" data-id="{{menu.id}}" data-toppings="{{menu.num_toppings}}">+</button>
-                        </td>
+                {% for menu in pizza_menu %}
+                <tr>
+                    <td>{{menu.classification}}</td>
+                    <td>{{menu.size}}</td>
+                    <td align="center"> {{menu.num_toppings}} {% if menu.num_toppings == 5 %}(Special) {% endif %}
+                    </td>
+                    <td> ${{menu.price}}</td>
+                    <td align="center">
+                        <button type="button" class="btn btn-outline-dark" data-id="{{menu.id}}"
+                                data-toppings="{{menu.num_toppings}}">+
+                        </button>
+                    </td>
 
-                    </tr>
-                    {% endfor %}
+                </tr>
+                {% endfor %}
                 </tbody>
 
 
                 {% else %}
                 <thead>
-                    <tr>
-                        <th scope="col">Pizza Type</th>
-                        <th scope="col">Size</th>
-                        <th scope="col">Number of Toppings</th>
-                        <th scope="col">Price</th>
-                    </tr>
+                <tr>
+                    <th scope="col">Pizza Type</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Number of Toppings</th>
+                    <th scope="col">Price</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for menu in pizza_menu %}
-                    <tr>
-                        <td>{{menu.classification}}</td>
-                        <td>{{menu.size}} </td>
-                        <td align="center"> {{menu.num_toppings}} {% if menu.num_toppings == 5 %}(Special) {% endif %}
-                        </td>
-                        <td> ${{menu.price}} </td>
+                {% for menu in pizza_menu %}
+                <tr>
+                    <td>{{menu.classification}}</td>
+                    <td>{{menu.size}}</td>
+                    <td align="center"> {{menu.num_toppings}} {% if menu.num_toppings == 5 %}(Special) {% endif %}
+                    </td>
+                    <td> ${{menu.price}}</td>
 
-                    </tr>
-                    {% endfor %}
+                </tr>
+                {% endfor %}
                 </tbody>
                 {% endif %}
 
@@ -98,7 +100,7 @@
 </div>
 
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">

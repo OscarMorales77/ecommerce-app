@@ -5,28 +5,27 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from .forms import CustomForm
 from django.views.decorators.csrf import ensure_csrf_cookie
-from .models import Toppings, PizzaPrice, PizzaOrder, SubPrice, SubOrder, PastaPrice, PastaOrder, SaladPrice, SaladOrder, \
+from .models import Toppings, PizzaPrice, PizzaOrder, SubPrice, SubOrder, PastaPrice, PastaOrder, SaladPrice, \
+    SaladOrder, \
     PlatterPrice, PlatterOrder, UserProfile, ShoppingCartOrders, PendingOrders
 
 import stripe
 
-stripe.api_key = settings.STRIPE_SECRET_KEY 
-# user is a class/model/table so i can pass
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
-# this function will handle all the logic pertaining to wether a user is authenticated
+
+
+
+# this function will handle all the logic pertaining to whether a user is authenticated
 # will also render the correct "base template"
-
-
 def auth_view(route, context, request):
     # if the user is authenticated render different options
     context['user'] = request.user
     if request.user.is_authenticated:
-        print(request.user.email)
         base_template = "orders/layoutAuth.html"
         # update the context dictionary/map
         context["base_template"] = base_template
         user_profile = UserProfile.objects.get(customer=request.user)
-        print(f"----------------> {user_profile}")
         return render(request, route, context)
 
     base_template = "orders/layout.html"
@@ -37,55 +36,54 @@ def auth_view(route, context, request):
 def index(request):
     route = "orders/index.html"
     context = {}
-    print(settings.STRIPE_SECRET_KEY )
     return auth_view(route, context, request)
 
+
 def cart(request):
-    print(request.method)
     route = "orders/shoppingcart.html"
     user_profile = UserProfile.objects.get(customer=request.user)
-    cart=ShoppingCartOrders.objects.get(customer=user_profile)
-    pending=PendingOrders.objects.get(customer=user_profile)
-    c_pizzas=cart.pizza_order.all()
-    c_subs=cart.sub_order.all()
-    c_pastas=cart.pasta_order.all()
-    c_salads=cart.salad_order.all()
-    c_platters=cart.platter_order.all()
-    #via post request remove items from cart and add them to the customers pending orders
+    cart = ShoppingCartOrders.objects.get(customer=user_profile)
+    pending = PendingOrders.objects.get(customer=user_profile)
+    c_pizzas = cart.pizza_order.all()
+    c_subs = cart.sub_order.all()
+    c_pastas = cart.pasta_order.all()
+    c_salads = cart.salad_order.all()
+    c_platters = cart.platter_order.all()
+    # via post request remove items from cart and add them to the customers pending orders model/table
     if request.method == 'POST':
-        total_price=0
+        total_price = 0
         for order in c_pizzas:
-            total_price+=order.price.price
+            total_price += order.price.price
             pending.pizza_order.add(order)
             cart.pizza_order.remove(order)
         for order in c_subs:
-            total_price+=order.price.price
+            total_price += order.price.price
             pending.sub_order.add(order)
             cart.sub_order.remove(order)
         for order in c_pastas:
-            total_price+=order.price.price
+            total_price += order.price.price
             pending.pasta_order.add(order)
             cart.pasta_order.remove(order)
         for order in c_salads:
-            total_price+=order.price.price
+            total_price += order.price.price
             pending.salad_order.add(order)
             cart.salad_order.remove(order)
         for order in c_platters:
-            total_price+=order.price.price
+            total_price += order.price.price
             pending.platter_order.add(order)
             cart.platter_order.remove(order)
-        print(f"----------> total is {round(total_price*100)}")
-        #customer= stripe.Customer.create(email=request.user.emai)
+        #create a stripe charge
         stripe.Charge.create(
-            amount=round(total_price*100),
+            amount=round(total_price * 100),
             currency='usd',
             description='A Django charge',
             source=request.POST['stripeToken']
         )
         return HttpResponseRedirect(reverse("index"))
 
-    context = {"pizzas":c_pizzas,"subs":c_subs,"pastas":c_pastas,"salads":c_salads, "platters":c_platters}
+    context = {"pizzas": c_pizzas, "subs": c_subs, "pastas": c_pastas, "salads": c_salads, "platters": c_platters}
     return auth_view(route, context, request)
+
 
 def remove_order(request):
     order_type = request.POST["orderType"]
@@ -95,22 +93,19 @@ def remove_order(request):
         order.delete()
     elif order_type == 'Salad':
         order = SaladOrder.objects.get(pk=order_id)
-        order.delete()  
-        print('-------------> Salad Works')
+        order.delete()
     elif order_type == 'Platter':
         order = PlatterOrder.objects.get(pk=order_id)
-        order.delete()  
-        print('-------------> Platter Works')
-    elif order_type == 'Sub':  
+        order.delete()
+    elif order_type == 'Sub':
         order = SubOrder.objects.get(pk=order_id)
-        order.delete()  
-        print('-------------> Sub Works')
+        order.delete()
 
     elif order_type == 'Pizza':
         order = PizzaOrder.objects.get(pk=order_id)
-        order.delete()  
-        print('----------------->Pizza')
+        order.delete()
     return HttpResponse(status=204)
+
 
 def pizza(request):
     route = "orders/pizza.html"
@@ -168,7 +163,7 @@ def login_view(request):
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            # this is where the request gets assigned the user
+            # this is where the request gets assigned to the user
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
@@ -184,7 +179,6 @@ def logout_view(request):
 
 def process_order(request):
     order_type = request.POST["orderType"]
-    print(order_type)
     price_id = request.POST["id"]
     user_profile = UserProfile.objects.get(customer=request.user)
     cart_order = ShoppingCartOrders.objects.get(customer=user_profile)  # get cart order for customer
@@ -193,36 +187,31 @@ def process_order(request):
         order = PastaOrder(customer=user_profile, price=price_model)  # create this particular order
         order.save()
         cart_order.pasta_order.add(order)  # add order to the customer's cart
-        print('-------------> Pasta Works')
     elif order_type == 'Salad':
         price_model = SaladPrice.objects.get(pk=price_id)
         order = SaladOrder(customer=user_profile, price=price_model)
         order.save()
         cart_order.salad_order.add(order)
-        print('-------------> Salad Works')
     elif order_type == 'Platter':
         price_model = PlatterPrice.objects.get(pk=price_id)
         order = PlatterOrder(customer=user_profile, price=price_model)
         order.save()
         cart_order.platter_order.add(order)
-        print('-------------> Platter Works')
-    elif order_type == 'Sub':  #to do add functionality for extra cheese on subs.
+    elif order_type == 'Sub':  # to do add functionality for extra cheese on subs.
         price_model = SubPrice.objects.get(pk=price_id)
         order = SubOrder(customer=user_profile, price=price_model, extra_cheese=request.POST["extra"])
         order.save()
         cart_order.sub_order.add(order)
-        print('-------------> Sub Works')
 
-    elif order_type == 'Pizza':  
+    elif order_type == 'Pizza':
         price_model = PizzaPrice.objects.get(pk=price_id)
         order = PizzaOrder(customer=user_profile, price=price_model)
         order.save()
         cart_order.pizza_order.add(order)
         toppings = request.POST.getlist('toppings[]')
-        #add toppings to pizza order
+        # add toppings to pizza order
         for i in toppings:
-            c_topping=Toppings.objects.get(topping=i)
+            c_topping = Toppings.objects.get(topping=i)
             order.topping.add(c_topping)
-        print('----------------->Pizza')
-        
+
     return HttpResponse(status=204)
