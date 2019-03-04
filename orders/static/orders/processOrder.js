@@ -1,7 +1,7 @@
+//handles all JS logic for platters, pasta, and salads views.
 document.addEventListener('DOMContentLoaded',() => {
-    let orderType=document.querySelector('#orderType').innerText; //order type
+    let orderType=document.querySelector('#orderType').innerText; //order type salad, pasta or platters
       document.querySelectorAll('.btn-outline-dark').forEach((button) => {
-          console.log("array of buttons created")
           button.onclick = () => {
               const request = new XMLHttpRequest();
               request.open('POST', '/private');

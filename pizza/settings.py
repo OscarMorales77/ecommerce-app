@@ -121,6 +121,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL='/images/'
+
 #crispy form settings
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 #stripe settings dev mode only

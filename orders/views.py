@@ -7,21 +7,23 @@ from .forms import CustomForm
 from django.views.decorators.csrf import ensure_csrf_cookie
 from .models import Toppings, PizzaPrice, PizzaOrder, SubPrice, SubOrder, PastaPrice, PastaOrder, SaladPrice, \
     SaladOrder, \
-    PlatterPrice, PlatterOrder, UserProfile, ShoppingCartOrders, PendingOrders
+    PlatterPrice, PlatterOrder, UserProfile, ShoppingCartOrders, PendingOrders, User
 
 import stripe
 
+#gets the enviroment variable to for Stripe api card purchase
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-
+#all oders by all customers
+global_orders_profile = UserProfile.objects.get(customer=User.objects.get(username='Global_Orders'))
 
 
 # this function will handle all the logic pertaining to whether a user is authenticated
-# will also render the correct "base template"
+# will also render the correct "base template" layout.html or layAuth.html
 def auth_view(route, context, request):
-    # if the user is authenticated render different options
-    context['user'] = request.user
+    
     if request.user.is_authenticated:
+        context['user'] = request.user
         base_template = "orders/layoutAuth.html"
         # update the context dictionary/map
         context["base_template"] = base_template
@@ -29,21 +31,23 @@ def auth_view(route, context, request):
         return render(request, route, context)
 
     base_template = "orders/layout.html"
+    context['userT'] = "please register to place an order"
     context["base_template"] = base_template
     return render(request, route, context)
 
-
+#index view
 def index(request):
     route = "orders/index.html"
     context = {}
     return auth_view(route, context, request)
 
-
+#shopping cart view also handles post request to add cart items to pending items model
 def cart(request):
     route = "orders/shoppingcart.html"
     user_profile = UserProfile.objects.get(customer=request.user)
     cart = ShoppingCartOrders.objects.get(customer=user_profile)
     pending = PendingOrders.objects.get(customer=user_profile)
+    pending_global = PendingOrders.objects.get(customer=global_orders_profile)
     c_pizzas = cart.pizza_order.all()
     c_subs = cart.sub_order.all()
     c_pastas = cart.pasta_order.all()
@@ -55,22 +59,27 @@ def cart(request):
         for order in c_pizzas:
             total_price += order.price.price
             pending.pizza_order.add(order)
+            pending_global.pizza_order.add(order)
             cart.pizza_order.remove(order)
         for order in c_subs:
             total_price += order.price.price
             pending.sub_order.add(order)
+            pending_global.sub_order.add(order)
             cart.sub_order.remove(order)
         for order in c_pastas:
             total_price += order.price.price
             pending.pasta_order.add(order)
+            pending_global.pasta_order.add(order)
             cart.pasta_order.remove(order)
         for order in c_salads:
             total_price += order.price.price
             pending.salad_order.add(order)
+            pending_global.salad_order.add(order)
             cart.salad_order.remove(order)
         for order in c_platters:
             total_price += order.price.price
             pending.platter_order.add(order)
+            pending_global.platter_order.add(order)
             cart.platter_order.remove(order)
         #create a stripe charge
         stripe.Charge.create(
@@ -79,12 +88,13 @@ def cart(request):
             description='A Django charge',
             source=request.POST['stripeToken']
         )
-        return HttpResponseRedirect(reverse("index"))
+        context = {"message":"Order has been placed!"}
+        return auth_view("orders/index.html", context, request)
 
     context = {"pizzas": c_pizzas, "subs": c_subs, "pastas": c_pastas, "salads": c_salads, "platters": c_platters}
     return auth_view(route, context, request)
 
-
+#remove an order via ajax and JS file  
 def remove_order(request):
     order_type = request.POST["orderType"]
     order_id = request.POST["id"]
@@ -104,9 +114,9 @@ def remove_order(request):
     elif order_type == 'Pizza':
         order = PizzaOrder.objects.get(pk=order_id)
         order.delete()
-    return HttpResponse(status=204)
+    return HttpResponse(status=204) #only handles post request hence it only returns a status code
 
-
+#pizza view
 def pizza(request):
     route = "orders/pizza.html"
     pizza_menu = PizzaPrice.objects.all()
@@ -114,7 +124,7 @@ def pizza(request):
     context = {"toppings": toppings, "pizza_menu": pizza_menu}
     return auth_view(route, context, request)
 
-
+#subs view
 def subs(request):
     route = "orders/subs.html"
     sub_menu = SubPrice.objects.all()
@@ -154,6 +164,7 @@ def register(request):
 
     form = CustomForm()
     context = {"form": form}
+    context['userT'] = "please register to place an order"
     return render(request, "orders/register.html", context)
 
 
@@ -176,10 +187,10 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
-
+#based on the selected price model(with unique ID) create the order for the user
 def process_order(request):
     order_type = request.POST["orderType"]
-    price_id = request.POST["id"]
+    price_id = request.POST["id"] #unique id on the Data Base(db) to create order model
     user_profile = UserProfile.objects.get(customer=request.user)
     cart_order = ShoppingCartOrders.objects.get(customer=user_profile)  # get cart order for customer
     if order_type == 'Pasta':
