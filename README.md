@@ -1,8 +1,2 @@
-# Project 3
-
-Web Programming with Python and JavaScript  
-The attached files meet the requirements for Project 3 Pizza.  
-The templates directory contains all necessary html files to render the web application.  
-The static directory contains all necessary JavaScript files to render the client-side web application.  
-requirements.txt has been updated with all necessary packages  
-'sub.js' and 'manage_db.py' CAN BE IGNORED as they are not part of the web application  
+Ecommerce Pizza - Python, Django, JavaScript, Bootstrap, HTML, CSS, Handlebars, Ajax, SQL, ORM, Stripe API  
+An ecommerce website that handles a pizza restaurant’s online orders. Users are able to register, browse menu items, and place online orders; user-orders are place into a shopping cart where they can be updated, modified, and saved. The Stripe API was used to handle credit card payments. Object-relational mapping (ORM) was used to model SQL tables that the application uses. Because of ORM, menu items can be dynamically updated and modified. 
