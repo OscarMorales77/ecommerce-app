@@ -158,7 +158,8 @@ def register(request):
         submmited_form = CustomForm(request.POST)
         if submmited_form.is_valid():
             submmited_form.save()
-            return HttpResponseRedirect(reverse("index"))
+            context = {"message":"Account created."}
+            return auth_view("orders/index.html", context, request)
         # render a html with the data already submitted by the user that does not meet the criteria
         return render(request, "orders/register.html", {"form": submmited_form})
 
